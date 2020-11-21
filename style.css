@@ -1,0 +1,31 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.wrapper {
+	width: 800px;
+	box-sizing: border-box;
+}
+
+.slider-box {
+	width: 100%;
+	margin: 200px 0 20px 0;
+	border: 1px solid;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.slider {
+	box-sizing: border-box;
+}
+
+.slider__item {
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+.slider__item img {
+	display: block;
+	width: 100%;
+}
