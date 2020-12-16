@@ -1,26 +1,25 @@
 body {
 	margin: 0;
 	padding: 0;
-}
-
-.wrapper {
-	width: 800px;
 	box-sizing: border-box;
 }
 
-.slider-box {
+.wrapper,
+.wrapper-2 {
+	width: 800px;
+	margin: 0 0 30px 0;
+}
+
+.slider {
 	width: 100%;
-	margin: 200px 0 20px 0;
+	margin: 0 0 20px 0;
 	border: 1px solid;
 	overflow: hidden;
 	box-sizing: border-box;
 }
 
-.slider {
-	box-sizing: border-box;
-}
-
 .slider__item {
+	flex-shrink: 0;
 	padding: 5px;
 	box-sizing: border-box;
 }
@@ -28,4 +27,23 @@ body {
 .slider__item img {
 	display: block;
 	width: 100%;
+}
+
+.dots {
+	margin: 30px 0;
+}
+
+.dots__item {
+	width: 10px;
+	height: 10px;
+	margin: 5px 7px;
+	padding: 0;
+	display: inline-block;
+	background: #bbb;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.active {
+	background: #000 !important;
 }

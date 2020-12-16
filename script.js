@@ -1,46 +1,53 @@
-function sliderLogic(sliderName, slideCount) {
+function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnimation, autoPlayTime) {
 
-    const slider = document.querySelector(sliderName);
-    const slides = document.querySelectorAll('.slider__item');
-    const sliderBoxWidth = document.querySelector('.slider-box').offsetWidth;
-    const sliderWidth = document.querySelector('.slider').offsetWidth;
-    const nextButton = document.querySelector('.next');
-    const prevButton = document.querySelector('.prev');
-    let slideWidth; // длина одного слайда
-    let countMovie = 0; // расстояние, на которое прокручивается слайдер за один раз
+    const sliderWpar = document.querySelector(sliderName);
+    const slider = sliderWpar.querySelector('.slider__line');
+    const dotsWrapper = sliderWpar.querySelector('.dots');
+    const buttonsWrapper = sliderWpar.querySelector('.buttons');
+    const slides = sliderWpar.querySelectorAll('.slider__item');
+    const slidesCount = slides.length;
+    const sliderBoxWidth = sliderWpar.querySelector('.slider').offsetWidth;
+    const sliderWidth = slider.offsetWidth;
+    let slideWidth;
+    let countMovie = 0;
+    let dotCount = slidesCount - slideVisible + 1;
+    let activeDot;
 
-    // определяем стили для слайдера
+    if (autoPlay) {
+        autoPlay = setInterval(function () {
+            nextin(slideWidth);
+        }, autoPlayTime);
+    }
+
     slider.style.cssText = `
         position: relative;
         left: 0;
         display: flex;
         align-items: center; 
-        transition: all 0.5s ease-in;
+        transition: all `+ timeAnimation + `s ease-in;
       `
-    // перебираем слайды и назначаем им стили
+
     slides.forEach(item => {
-        // slideWidth - длина одного слайда равна ширине слайдера деленное на кол-во слайдов(slideCount)
-        slideWidth = sliderBoxWidth / slideCount;
-        item.style.flexShrink = '0';
+        slideWidth = sliderBoxWidth / slideVisible;
         item.style.width = slideWidth + 'px';
     });
 
-    // функция работы слайдера
     function goSlide(n) {
-        countMovie = countMovie - n; // меняем значение countMovie, вычитая из него текущую длину слайда
-        /* если прокрутили до последнего слайда, то возвращаем в начало. Вычисляется так:
-         если значение, на которое мы уже прокрутили, меньше чем общая длина всего слайдера
-         (текущая длина слайда умножить на общее кол-во слайдов, (slideWidth * slides.length-так получаем длину всего слайдера), минус
-         общая длина последних слайдов, в указанном кол-ве (slideCount * slideWidth)), тогда countMovie возвращаем в ноль, что
-         возвращает слайдер в начало*/
-        if (countMovie < -((slideWidth * slides.length) - (slideCount * slideWidth))) {
+        countMovie = countMovie - n;
+        if (countMovie < -((slideWidth * slides.length) - (slideVisible * slideWidth))) {
             countMovie = 0;
         }
-        // если двигаем слайдер в обратном напралении, то все наоборот.
         if (countMovie > 0) {
-            countMovie = -(slideWidth * slides.length) - -(slideCount * slideWidth);
+            countMovie = -(slideWidth * slides.length) - -(slideVisible * slideWidth);
         }
-        slider.style.left = countMovie + 'px'; // записываем полученное значение countMovie в стили
+        dotsElems.forEach(elem => {
+            elem.classList.remove('active');
+        });
+        activeDot = countMovie / -slideWidth;
+        if (dots) {
+            dotsElems[activeDot].classList.add('active');
+        }
+        slider.style.left = countMovie + 'px';
     }
 
     function nextin(n) {
@@ -50,17 +57,51 @@ function sliderLogic(sliderName, slideCount) {
         goSlide(-n);
     }
 
-    nextButton.addEventListener('click', () => {
-        nextin(slideWidth);
+    if (dots) {
+        let dot = '';
+        for (let i = 0; i < dotCount; i++) {
+            dot += '<span class="dots__item"></span>'
+        }
+        dotsWrapper.innerHTML = dot;
+    }
+
+    let dotsElems = sliderWpar.querySelectorAll('.dots__item');
+    dotsElems.forEach((item, i) => {
+        if (countMovie == 0) {
+            dotsElems[0].classList.add('active');
+        }
+        item.addEventListener('click', function () {
+            clearInterval(autoPlay);
+            dotsElems.forEach(elem => {
+                elem.classList.remove('active');
+            });
+            this.classList.add('active');
+            countMovie = 0 - (i * slideWidth);
+            slider.style.left = countMovie + 'px';
+        });
     });
-    prevButton.addEventListener('click', () => {
-        previous(slideWidth);
-    });
+
+    if (buttons) {
+        const nextButton = document.createElement('button');
+        nextButton.classList.add('next');
+        nextButton.innerText = 'next';
+        const prevButton = document.createElement('button');
+        prevButton.classList.add('prev');
+        prevButton.innerText = 'prev';
+
+        buttonsWrapper.append(prevButton, nextButton);
+
+        nextButton.addEventListener('click', () => {
+            nextin(slideWidth);
+            clearInterval(autoPlay);
+        });
+        prevButton.addEventListener('click', () => {
+            previous(slideWidth);
+            clearInterval(autoPlay);
+        });
+    }
 
 }
-
-sliderLogic('.slider', 4); // вызываем слайдер, с указанным селектором и кол-вом слайдов
-
-    // window.onresize = function(){
-    //   sliderLogic('.slider', 3);
-    // }
+// sliderLogic(селектор обертки слайдера, кол-во видимых слайдов, показывать точки или нет, показывать кнопки или нет, включить автопрокрутку или нет, время анимации прокрутки слайдов, интервал автопрокрутки)
+sliderLogic('.wrapper', 2, true, true, false, 1, 1000);
+sliderLogic('.wrapper-2', 4, true, true, true, 0.5, 1000);
