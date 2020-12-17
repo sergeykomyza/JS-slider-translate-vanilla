@@ -1,22 +1,22 @@
-function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnimation, autoPlayTime) {
+function sliderLogic(options) {
 
-    const sliderWpar = document.querySelector(sliderName);
+    const sliderWpar = document.querySelector(options.sliderName);
     const slider = sliderWpar.querySelector('.slider__line');
     const dotsWrapper = sliderWpar.querySelector('.dots');
     const buttonsWrapper = sliderWpar.querySelector('.buttons');
     const slides = sliderWpar.querySelectorAll('.slider__item');
     const slidesCount = slides.length;
     const sliderBoxWidth = sliderWpar.querySelector('.slider').offsetWidth;
-    const sliderWidth = slider.offsetWidth;
     let slideWidth;
     let countMovie = 0;
-    let dotCount = slidesCount - slideVisible + 1;
+    let dotCount = slidesCount - options.slideVisible + 1;
     let activeDot;
+    let autoScroll;
 
-    if (autoPlay) {
-        autoPlay = setInterval(function () {
+    if (options.autoPlay) {
+        autoScroll = setInterval(function () {
             nextin(slideWidth);
-        }, autoPlayTime);
+        }, options.autoPlayTime);
     }
 
     slider.style.cssText = `
@@ -24,27 +24,27 @@ function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnim
         left: 0;
         display: flex;
         align-items: center; 
-        transition: all `+ timeAnimation + `s ease-in;
+        transition: all `+ options.timeAnimation + `s ease-in;
       `
 
     slides.forEach(item => {
-        slideWidth = sliderBoxWidth / slideVisible;
+        slideWidth = Math.round(sliderBoxWidth / options.slideVisible);
         item.style.width = slideWidth + 'px';
     });
 
     function goSlide(n) {
         countMovie = countMovie - n;
-        if (countMovie < -((slideWidth * slides.length) - (slideVisible * slideWidth))) {
+        if (countMovie < -((slideWidth * slides.length) - (options.slideVisible * slideWidth))) {
             countMovie = 0;
         }
         if (countMovie > 0) {
-            countMovie = -(slideWidth * slides.length) - -(slideVisible * slideWidth);
+            countMovie = -(slideWidth * slides.length) - -(options.slideVisible * slideWidth);
         }
         dotsElems.forEach(elem => {
             elem.classList.remove('active');
         });
         activeDot = countMovie / -slideWidth;
-        if (dots) {
+        if (options.dots) {
             dotsElems[activeDot].classList.add('active');
         }
         slider.style.left = countMovie + 'px';
@@ -57,7 +57,7 @@ function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnim
         goSlide(-n);
     }
 
-    if (dots) {
+    if (options.dots) {
         let dot = '';
         for (let i = 0; i < dotCount; i++) {
             dot += '<span class="dots__item"></span>'
@@ -71,7 +71,7 @@ function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnim
             dotsElems[0].classList.add('active');
         }
         item.addEventListener('click', function () {
-            clearInterval(autoPlay);
+            clearInterval(autoScroll);
             dotsElems.forEach(elem => {
                 elem.classList.remove('active');
             });
@@ -81,27 +81,51 @@ function sliderLogic(sliderName, slideVisible, dots, buttons, autoPlay, timeAnim
         });
     });
 
-    if (buttons) {
+    if (options.buttons) {
+
+        let sliderClassName = sliderWpar.className;
+
         const nextButton = document.createElement('button');
-        nextButton.classList.add('next');
+        nextButton.classList.add('' + sliderClassName + '__next');
         nextButton.innerText = 'next';
         const prevButton = document.createElement('button');
-        prevButton.classList.add('prev');
+        prevButton.classList.add('' + sliderClassName + '__prev');
         prevButton.innerText = 'prev';
 
         buttonsWrapper.append(prevButton, nextButton);
 
-        nextButton.addEventListener('click', () => {
+        nextButton.addEventListener('click', function () {
             nextin(slideWidth);
-            clearInterval(autoPlay);
+            clearInterval(autoScroll);
         });
+
         prevButton.addEventListener('click', () => {
             previous(slideWidth);
-            clearInterval(autoPlay);
+            clearInterval(autoScroll);
         });
+
     }
 
 }
-// sliderLogic(селектор обертки слайдера, кол-во видимых слайдов, показывать точки или нет, показывать кнопки или нет, включить автопрокрутку или нет, время анимации прокрутки слайдов, интервал автопрокрутки)
-sliderLogic('.wrapper', 2, true, true, false, 1, 1000);
-sliderLogic('.wrapper-2', 4, true, true, true, 0.5, 1000);
+
+sliderLogic({
+    sliderName: '.wrapper',
+    slideVisible: 3,
+    dots: true,
+    buttons: true,
+    autoPlay: true,
+    timeAnimation: 1,
+    autoPlayTime: 2000
+});
+
+sliderLogic({
+    sliderName: '.wrapper-2',
+    slideVisible: 4,
+    dots: true,
+    buttons: true,
+    autoPlay: true,
+    timeAnimation: 1,
+    autoPlayTime: 2000
+});
+
+
