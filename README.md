@@ -4,6 +4,14 @@ https://codepen.io/sergo/pen/PozYbYj
 
 "Скользящий" слайдер на чистом js
 
-Можно выставлять нужное кол-во видимых слайдов, опция навигационных точек, кнопок, автопрокрутки, длительность анимации прокрутки, длительность автопрокрутки
+настройки вынесены в вызов функции
 
-sliderLogic('.wrapper', 4, true, true, true, 0.5, 1000);
+sliderLogic({
+    sliderName: '.wrapper',
+    slideVisible: 3,
+    dots: true,
+    buttons: true,
+    autoPlay: true,
+    timeAnimation: 1,
+    autoPlayTime: 2000
+});
