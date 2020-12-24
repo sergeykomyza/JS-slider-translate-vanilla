@@ -1,6 +1,6 @@
 # slider-translate-vanilla-js
 
-https://codepen.io/sergo/pen/PozYbYj
+
 
 "Скользящий" слайдер на чистом js
 
