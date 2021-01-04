@@ -9,9 +9,10 @@
 sliderLogic({
     sliderName: '.wrapper',
     slideVisible: 3,
-    dots: true,
-    buttons: true,
     autoPlay: true,
-    timeAnimation: 1,
-    autoPlayTime: 2000
+    loop: true,
+    buttons: true,
+    dots: true,
+    speed: 1000,
+    autoPlaySpeed: 3000
 });
