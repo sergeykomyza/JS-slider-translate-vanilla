@@ -13,9 +13,12 @@ body {
 .slider {
 	width: 100%;
 	margin: 0 0 20px 0;
-	border: 1px solid;
 	overflow: hidden;
 	box-sizing: border-box;
+}
+
+.slider__line{
+	border: 1px solid;
 }
 
 .slider__item {
@@ -46,4 +49,8 @@ body {
 
 .active {
 	background: #000 !important;
+}
+
+.buttons{
+	display: flex;
 }
