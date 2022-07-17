@@ -174,6 +174,16 @@ function sliderLogic(options) {
 
 sliderLogic({
     sliderName: '.wrapper',
+    slideVisible: 1,
+    autoPlay: true,
+    loop: false,
+    buttons: true,
+    dots: true,
+    speed: 1000,
+    autoPlaySpeed: 3000
+});
+sliderLogic({
+    sliderName: '.wrapper-2',
     slideVisible: 3,
     autoPlay: true,
     loop: true,
